@@ -40,7 +40,7 @@ func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, e
 	case "Delete":
 		return s.Delete(ctx, event)
 	default:
-		return "", fmt.Errorf("Unknown request type: %s", event.RequestType)
+		return "", nil, fmt.Errorf("Unknown request type: %s", event.RequestType)
 	}
 }
 
@@ -51,13 +51,13 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 	// Get custom resource parameter from event
 	ssmPath, err := strProperty(event, "credential_name")
 	if err != nil {
-		return physicalResourceID, fmt.Errorf("Couldn't extract credential_name: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential_name: %s", err)
 	}
 	physicalResourceID = ssmPath
 
 	ssmValue, err := strProperty(event, "credential_value")
 	if err != nil {
-		return physicalResourceID, fmt.Errorf("Couldn't extract credential_value: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential_value: %s", err)
 	}
 
 	// Put new parameter
@@ -69,9 +69,9 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 	})
 
 	if err != nil {
-		return physicalResourceID, fmt.Errorf("Couldn't put parameter (%s): %s\n", ssmPath, err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't put parameter (%s): %s\n", ssmPath, err)
 	}
-	return physicalResourceID, nil
+	return physicalResourceID, nil, nil
 }
 
 // Update overwrites a SSM parameter by a new value
@@ -85,7 +85,7 @@ func (s SSMCustomResourceHandler) Delete(ctx context.Context, event cfn.Event) (
 
 	ssmPath, err := strProperty(event, "credential_name")
 	if err != nil {
-		return physicalResourceID, fmt.Errorf("Couldn't find property credential_name: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't find property credential_name: %s", err)
 	}
 	physicalResourceID = ssmPath
 
@@ -94,8 +94,8 @@ func (s SSMCustomResourceHandler) Delete(ctx context.Context, event cfn.Event) (
 	})
 
 	if err != nil {
-		return physicalResourceID, fmt.Errorf("Couldn't delete parameter (%s): %s\n", ssmPath, err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't delete parameter (%s): %s\n", ssmPath, err)
 	}
 
-	return physicalResourceID, nil
+	return physicalResourceID, nil, nil
 }

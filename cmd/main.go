@@ -26,15 +26,16 @@ func init() {
 
 // lambdaHandler handles incoming CloudFormation events
 // is of type cfn.CustomResourceFunction
-func lambdaHandler(ctx context.Context, event cfn.Event) (physicalResourceID string, data map[string]interface{}, err error) {
+func lambdaHandler(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
+	var physicalResourceID string
 	switch event.ResourceType {
-		cfn.Custom
 	case "Custom::SSMCredential":
 		resourceHandler := internal.NewSSMCustomResourceHandler(awsSession)
-
+		fmt.Printf("resHandler: %#v\n", resourceHandler)
 	default:
-		return "", fmt.Errorf("Unknown resource type: %s", event.ResourceType)
+		return physicalResourceID, nil, fmt.Errorf("Unknown resource type: %s", event.ResourceType)
 	}
+	return physicalResourceID, nil, nil
 }
 
 // main function
