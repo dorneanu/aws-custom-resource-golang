@@ -11,8 +11,8 @@ import (
 )
 
 // SSMParameterAPI defines an interface for the SSM API calls
-// I use this interface in order to be able to mock out the SSM
-// client and implement unit tests properly.
+// I use this interface in order to be able to mock out the SSM client and implement unit tests properly.
+//
 // Also check https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/gov2/ssm
 type SSMParameterAPI interface {
 	DeleteParameter(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error)
@@ -30,7 +30,7 @@ func NewSSMCustomResourceHandler(cfg aws.Config) SSMCustomResourceHandler {
 	}
 }
 
-// handle does something
+// handleSSMCustomResource decides what to do in case of CloudFormation event
 func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	switch event.RequestType {
 	case "Create":
@@ -44,7 +44,7 @@ func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, e
 	}
 }
 
-// Create puts a new SSM parameter
+// Create creates a new SSM parameter
 func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
 

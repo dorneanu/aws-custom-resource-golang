@@ -25,7 +25,7 @@ func init() {
 }
 
 // lambdaHandler handles incoming CloudFormation events
-// is of type cfn.CustomResourceFunction
+// and is of type cfn.CustomResourceFunction
 func lambdaHandler(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
 	switch event.ResourceType {
