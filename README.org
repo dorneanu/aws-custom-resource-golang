@@ -1,0 +1,11 @@
+AWS custom resources using Golang, Lambda and TypeScript.
+
+* Motivation
+- See blog post
+* Deployment
+
+* Resources
+- 2023-03-15 ◦ [[https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/][Building, bundling, and deploying applications with the AWS CDK | AWS DevOps Blog]]
+  - Related: [[https://github.com/aws-samples/cdk-build-bundle-deploy-example][github.com/aws-samples/cdk-build-bundle-deploy-example]]
+- 2023-03-15 ◦ [[https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript][AWS CDK examples using TypeScript]]
+- 2023-03-13 ◦ [[https://github.com/thomaspoignant/cdk-golang-lambda-deployment][Build a Golang based Lambda function using CDK and TypeScript]]
