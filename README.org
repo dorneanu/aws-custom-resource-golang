@@ -3,8 +3,16 @@ AWS custom resources using Golang, Lambda and TypeScript.
 * Motivation
 - See blog post
 * Deployment
-
+* TODOs
+- [ ] Try to bundle Golang based lambda function locally first (see this [[https://github.com/aws-samples/cdk-build-bundle-deploy-example/blob/main/cdk-bundle-go-lambda-example/lib/api-stack.ts][example]])
+- [ ] Test locally
 * Resources
+- 2023-03-16 ◦ [[https://www.npmjs.com/package/cdk-secure-parameter-store][cdk-secure-parameter-store - Create SecureString SSM parameter through CDK (TypeScript project)]]
+  - Related: [[https://github.com/HarshRohila/cdk-secure-parameter-store][github.com/HarshRohila/cdk-secure-parameter-store]]
+- 2023-03-16 ◦ [[https://github.com/aws/aws-cdk/issues/3520][RFC: Have CDK put SecureString type parameter values into SSM securely · Issue #3520 · aws/aws-cdk · GitHub]]
+- 2023-03-16 ◦ [[https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/custom-resource][github.com/aws-cdk-examples/typescript/custom-resource official example using Python and TypeScript]]
+- 2023-03-16 ◦ [[https://medium.com/cyberark-engineering/advanced-custom-resources-with-aws-cdk-1e024d4fb2fa][Advanced AWS Custom Resources with CDK using Python]]
+  - Related: [[https://github.com/royby-cyberark/iot-policy-custom-resource-example][github.com/royby-cyberark/iot-policy-custom-resource-example]]
 - 2023-03-15 ◦ [[https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/][Building, bundling, and deploying applications with the AWS CDK | AWS DevOps Blog]]
   - Related: [[https://github.com/aws-samples/cdk-build-bundle-deploy-example][github.com/aws-samples/cdk-build-bundle-deploy-example]]
 - 2023-03-15 ◦ [[https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript][AWS CDK examples using TypeScript]]

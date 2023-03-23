@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/aws/aws-lambda-go/cfn"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -32,6 +33,8 @@ func NewSSMCustomResourceHandler(cfg aws.Config) SSMCustomResourceHandler {
 
 // handleSSMCustomResource decides what to do in case of CloudFormation event
 func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
+	log.Printf("event: %#v\n", event)
+
 	switch event.RequestType {
 	case "Create":
 		return s.Create(ctx, event)
@@ -49,15 +52,15 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 	var physicalResourceID string
 
 	// Get custom resource parameter from event
-	ssmPath, err := strProperty(event, "credential_name")
+	ssmPath, err := strProperty(event, "key")
 	if err != nil {
-		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential_name: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential's key: %s", err)
 	}
 	physicalResourceID = ssmPath
 
-	ssmValue, err := strProperty(event, "credential_value")
+	ssmValue, err := strProperty(event, "value")
 	if err != nil {
-		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential_value: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential's value: %s", err)
 	}
 
 	// Put new parameter
@@ -67,6 +70,7 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 		Type:      types.ParameterTypeSecureString,
 		Overwrite: aws.Bool(true),
 	})
+	log.Printf("Put parameter into SSM: %s", physicalResourceID)
 
 	if err != nil {
 		return physicalResourceID, nil, fmt.Errorf("Couldn't put parameter (%s): %s\n", ssmPath, err)
@@ -83,9 +87,9 @@ func (s SSMCustomResourceHandler) Update(ctx context.Context, event cfn.Event) (
 func (s SSMCustomResourceHandler) Delete(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
 
-	ssmPath, err := strProperty(event, "credential_name")
+	ssmPath, err := strProperty(event, "key")
 	if err != nil {
-		return physicalResourceID, nil, fmt.Errorf("Couldn't find property credential_name: %s", err)
+		return physicalResourceID, nil, fmt.Errorf("Couldn't find property credential's key: %s", err)
 	}
 	physicalResourceID = ssmPath
 

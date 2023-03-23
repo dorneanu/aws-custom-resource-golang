@@ -21,15 +21,16 @@ func init() {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
 	awsSession = cfg
-	fmt.Print("initialized aws session: %#v", awsSession)
 }
 
 // lambdaHandler handles incoming CloudFormation events
 // and is of type cfn.CustomResourceFunction
 func lambdaHandler(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
+	log.Printf("event: %#v\n", event)
+
 	switch event.ResourceType {
-	case "Custom::SSMCredential":
+	case "AWS::CloudFormation::CustomResource":
 		resourceHandler := internal.NewSSMCustomResourceHandler(awsSession)
 		fmt.Printf("resHandler: %#v\n", resourceHandler)
 	default:
@@ -55,5 +56,6 @@ func main() {
 	//	func main() {
 	//		lambda.Start(cfn.LambdaWrap(myLambda))
 	//	}
+	log.Print("Starting lambda")
 	lambda.Start(cfn.LambdaWrap(lambdaHandler))
 }
