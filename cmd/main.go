@@ -32,7 +32,7 @@ func lambdaHandler(ctx context.Context, event cfn.Event) (string, map[string]int
 	switch event.ResourceType {
 	case "AWS::CloudFormation::CustomResource":
 		resourceHandler := internal.NewSSMCustomResourceHandler(awsSession)
-		fmt.Printf("resHandler: %#v\n", resourceHandler)
+		return resourceHandler.HandleSSMCustomResource(ctx, event)
 	default:
 		return physicalResourceID, nil, fmt.Errorf("Unknown resource type: %s", event.ResourceType)
 	}

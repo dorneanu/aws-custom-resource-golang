@@ -32,7 +32,7 @@ func NewSSMCustomResourceHandler(cfg aws.Config) SSMCustomResourceHandler {
 }
 
 // handleSSMCustomResource decides what to do in case of CloudFormation event
-func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
+func (s SSMCustomResourceHandler) HandleSSMCustomResource(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	log.Printf("event: %#v\n", event)
 
 	switch event.RequestType {
@@ -50,6 +50,7 @@ func (s SSMCustomResourceHandler) handleSSMCustomResource(ctx context.Context, e
 // Create creates a new SSM parameter
 func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
+	log.Printf("Creating SSM parameter")
 
 	// Get custom resource parameter from event
 	ssmPath, err := strProperty(event, "key")
