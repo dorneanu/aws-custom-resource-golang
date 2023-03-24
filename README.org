@@ -5,6 +5,7 @@ AWS custom resources using Golang, Lambda and TypeScript.
 * Deployment
 * TODOs
 - [ ] Try to bundle Golang based lambda function locally first (see this [[https://github.com/aws-samples/cdk-build-bundle-deploy-example/blob/main/cdk-bundle-go-lambda-example/lib/api-stack.ts][example]])
+- [ ] Add [[https://github.com/sirupsen/logrus][logrus]]
 - [ ] Test locally
 * Resources
 - 2023-03-16 ◦ [[https://www.npmjs.com/package/cdk-secure-parameter-store][cdk-secure-parameter-store - Create SecureString SSM parameter through CDK (TypeScript project)]]
