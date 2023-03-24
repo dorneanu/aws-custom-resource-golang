@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as path from "path";
 import * as customResources from "aws-cdk-lib/custom-resources";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { spawnSync, SpawnSyncOptions } from "child_process";
 import { Construct } from "constructs";
 import { SSMCredential } from "./custom-resource";
@@ -17,6 +18,24 @@ export class DeploymentsStack extends cdk.Stack {
       GOARCH: "amd64",
     };
     const lambdaPath = path.join(__dirname, "../../");
+
+    // Create IAM role
+    const iamRole = new iam.Role(this, 'Role', {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      roleName: "CustomResourcesGolangIAMRole",
+      // With version 2 of CDK you have to add service-role/ to managed policy
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")],
+    });
+
+
+    // Add further policies to IAM role
+    iamRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["ssm:PutParameter", "ssm:DeleteParameter"],
+        resources: ["arn:aws:ssm:eu-central-1::parameter/test/*"],
+      })
+    );
 
     // We could bundle the Golang binary also locally.
     // See https://github.com/aws-samples/cdk-build-bundle-deploy-example/blob/main/cdk-bundle-go-lambda-example/lib/api-stack.ts
@@ -50,7 +69,7 @@ export class DeploymentsStack extends cdk.Stack {
               exec(
                 [
                   "make build", // run tests first
-                  `GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ${path.join(
+                  `GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w" -o ${path.join(
                     outputDir,
                     "main"
                   )} ./cmd/main.go`,
@@ -88,8 +107,11 @@ export class DeploymentsStack extends cdk.Stack {
         },
       }),
       handler: "/main",
+      role: iamRole,
       runtime: lambda.Runtime.GO_1_X,
     });
+
+
 
     // Create a new custom resource provider
     const provider = new customResources.Provider(this, "Provider", {
@@ -98,37 +120,7 @@ export class DeploymentsStack extends cdk.Stack {
 
     // Create custom resource
     new SSMCredential(this, "SSMCredential1", provider, {
-      key: "/testing",
-      value: "some-secret-value",
-    });
-
-    new SSMCredential(this, "SSMCredential2", provider, {
-      key: "/testing2",
-      value: "some-secret-value",
-    });
-
-    new SSMCredential(this, "SSMCredential3", provider, {
-      key: "/testing3",
-      value: "some-secret-value",
-    });
-    //
-    new SSMCredential(this, "SSMCredential4", provider, {
-      key: "/testing4",
-      value: "some-secret-value",
-    });
-
-    new SSMCredential(this, "SSMCredential5", provider, {
-      key: "/testing5",
-      value: "some-secret-value",
-    });
-
-    new SSMCredential(this, "SSMCredential6", provider, {
-      key: "/testing6",
-      value: "some-secret-value",
-    });
-
-    new SSMCredential(this, "SSMCredential7", provider, {
-      key: "/testing6",
+      key: "/test/testing",
       value: "some-secret-value",
     });
   }
