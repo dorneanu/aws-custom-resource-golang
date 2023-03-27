@@ -124,16 +124,6 @@ export class DeploymentsStack extends cdk.Stack {
       key: "/test/testing",
       value: "some-secret-value",
     });
-
-    // new SSMCredential(this, "SSMCredential2", provider, {
-    //   key: "/test/testing2",
-    //   value: "some-secret-value",
-    // });
-
-    // new SSMCredential(this, "SSMCredential3", provider, {
-    //   key: "/test/testing3",
-    //   value: "some-secret-value",
-    // });
   }
 }
 
