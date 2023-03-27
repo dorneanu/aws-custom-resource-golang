@@ -32,8 +32,9 @@ export class DeploymentsStack extends cdk.Stack {
     iamRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["ssm:PutParameter", "ssm:DeleteParameter"],
-        resources: ["arn:aws:ssm:eu-central-1::parameter/test/*"],
+        // actions: ["ssm:PutParameter", "ssm:DeleteParameter"],
+        actions: ["ssm:PutParameter", "ssm:GetParameter", "ssm:GetParameters", "ssm:DeleteParameter"],
+        resources: [`arn:aws:ssm:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:parameter/test/*`],
       })
     );
 
@@ -123,6 +124,16 @@ export class DeploymentsStack extends cdk.Stack {
       key: "/test/testing",
       value: "some-secret-value",
     });
+
+    // new SSMCredential(this, "SSMCredential2", provider, {
+    //   key: "/test/testing2",
+    //   value: "some-secret-value",
+    // });
+
+    // new SSMCredential(this, "SSMCredential3", provider, {
+    //   key: "/test/testing3",
+    //   value: "some-secret-value",
+    // });
   }
 }
 
