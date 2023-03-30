@@ -36,11 +36,11 @@ func (s SSMCustomResourceHandler) HandleSSMCustomResource(ctx context.Context, e
 	log.Printf("event: %#v\n", event)
 
 	switch event.RequestType {
-	case "Create":
+	case cfn.RequestCreate:
 		return s.Create(ctx, event)
-	case "Update":
+	case cfn.RequestUpdate:
 		return s.Update(ctx, event)
-	case "Delete":
+	case cfn.RequestDelete:
 		return s.Delete(ctx, event)
 	default:
 		return "", nil, fmt.Errorf("Unknown request type: %s", event.RequestType)
