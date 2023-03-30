@@ -25,6 +25,29 @@ func (s SSMParameterApiImpl) DeleteParameter(ctx context.Context, params *ssm.De
 	return output, nil
 }
 
+// TestDeleteParameter
+func TestDeleteParameter(t *testing.T) {
+	mockAPI := SSMParameterApiImpl{}
+	ssmHandler := SSMCustomResourceHandler{
+		ssmClient: mockAPI,
+	}
+	cfnEvent := cfn.Event{
+		RequestType:        "Delete",
+		RequestID:          "xxx",
+		ResponseURL:        "https://dornea.nu",
+		ResourceType:       "AWS::CloudFormation::CustomResource",
+		PhysicalResourceID: "arn:aws:ssm:eu-central-1:9999999:parameter/testing3",
+		LogicalResourceID:  "SSMCredentialTesting1",
+	}
+}
+
+// Write a test for the Delete method
+// TODO: Implement this
+// TestDeleteParameter ...
+func TestDeleteParameter(t *testing.T) {
+	fmt.Printf("Implement this")
+}
+
 // TestPutParameter ...
 func TestPutParameter(t *testing.T) {
 	fmt.Printf("Implement this ")
