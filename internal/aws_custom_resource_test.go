@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/cfn"
@@ -12,14 +11,13 @@ import (
 // SSMParameterApiImpl is a mock for SSMParameterAPI
 type SSMParameterApiImpl struct{}
 
-// PutParameter ...
-// TODO: Implement this
+// PutParameter
 func (s SSMParameterApiImpl) PutParameter(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
 	output := &ssm.PutParameterOutput{}
 	return output, nil
 }
 
-// DeleteParameter ...
+// DeleteParameter
 func (s SSMParameterApiImpl) DeleteParameter(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
 	output := &ssm.DeleteParameterOutput{}
 	return output, nil
@@ -27,30 +25,23 @@ func (s SSMParameterApiImpl) DeleteParameter(ctx context.Context, params *ssm.De
 
 // TestDeleteParameter
 func TestDeleteParameter(t *testing.T) {
-	mockAPI := SSMParameterApiImpl{}
-	ssmHandler := SSMCustomResourceHandler{
-		ssmClient: mockAPI,
-	}
-	cfnEvent := cfn.Event{
-		RequestType:        "Delete",
-		RequestID:          "xxx",
-		ResponseURL:        "https://dornea.nu",
-		ResourceType:       "AWS::CloudFormation::CustomResource",
-		PhysicalResourceID: "arn:aws:ssm:eu-central-1:9999999:parameter/testing3",
-		LogicalResourceID:  "SSMCredentialTesting1",
-	}
-}
+	// mockAPI := SSMParameterApiImpl{}
+	// ssmHandler := SSMCustomResourceHandler{
+	// 	ssmClient: mockAPI,
+	// }
+	// cfnEvent := cfn.Event{
+	// 	RequestType:        "Delete",
+	// 	RequestID:          "xxx",
+	// 	ResponseURL:        "https://dornea.nu",
+	// 	ResourceType:       "AWS::CloudFormation::CustomResource",
+	// 	PhysicalResourceID: "arn:aws:ssm:eu-central-1:9999999:parameter/testing3",
+	// 	LogicalResourceID:  "SSMCredentialTesting1",
+	// }
 
-// Write a test for the Delete method
-// TODO: Implement this
-// TestDeleteParameter ...
-func TestDeleteParameter(t *testing.T) {
-	fmt.Printf("Implement this")
 }
 
 // TestPutParameter ...
 func TestPutParameter(t *testing.T) {
-	fmt.Printf("Implement this ")
 	mockedAPI := SSMParameterApiImpl{}
 	ssmHandler := SSMCustomResourceHandler{
 		ssmClient: mockedAPI,
@@ -73,10 +64,4 @@ func TestPutParameter(t *testing.T) {
 	}
 	_, _, _ = ssmHandler.Create(context.TODO(), cfnEvent)
 
-}
-
-// TestDeleteParameter ...
-// TODO: Implement this
-func TestDeleteParameter(t *testing.T) {
-	fmt.Printf("Implement this")
 }
