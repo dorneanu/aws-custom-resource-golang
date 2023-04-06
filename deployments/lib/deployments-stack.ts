@@ -2,7 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as path from "path";
 import * as customResources from "aws-cdk-lib/custom-resources";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as iam from 'aws-cdk-lib/aws-iam';
+import * as iam from "aws-cdk-lib/aws-iam";
 import { spawnSync, SpawnSyncOptions } from "child_process";
 import { Construct } from "constructs";
 import { SSMCredential } from "./custom-resource";
@@ -20,21 +20,34 @@ export class DeploymentsStack extends cdk.Stack {
     const lambdaPath = path.join(__dirname, "../../");
 
     // Create IAM role
-    const iamRole = new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+    const iamRole = new iam.Role(this, "Role", {
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       roleName: "CustomResourcesGolangIAMRole",
       // With version 2 of CDK you have to add service-role/ to managed policy
-      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")],
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaBasicExecutionRole"
+        ),
+      ],
     });
-
 
     // Add further policies to IAM role
     iamRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         // actions: ["ssm:PutParameter", "ssm:DeleteParameter"],
-        actions: ["ssm:PutParameter", "ssm:GetParameter", "ssm:GetParameters", "ssm:DeleteParameter"],
-        resources: [`arn:aws:ssm:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:parameter/test/*`],
+        actions: [
+          "ssm:PutParameter",
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:DeleteParameter",
+          "ssm:AddTagsToResource",
+        ],
+        resources: [
+          `arn:aws:ssm:${cdk.Stack.of(this).region}:${
+            cdk.Stack.of(this).account
+          }:parameter/test/*`,
+        ],
       })
     );
 
@@ -110,9 +123,8 @@ export class DeploymentsStack extends cdk.Stack {
       handler: "/main",
       role: iamRole,
       runtime: lambda.Runtime.GO_1_X,
+      functionName: "CustomResourcesGolangLambda",
     });
-
-
 
     // Create a new custom resource provider
     const provider = new customResources.Provider(this, "Provider", {
@@ -121,7 +133,12 @@ export class DeploymentsStack extends cdk.Stack {
 
     // Create custom resource
     new SSMCredential(this, "SSMCredential1", provider, {
-      key: "/test/testing",
+      key: "/test/testing1",
+      value: "some-secret-value",
+    });
+
+    new SSMCredential(this, "SSMCredential2", provider, {
+      key: "/test/testing2",
       value: "some-secret-value",
     });
   }
