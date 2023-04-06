@@ -1,12 +1,51 @@
 AWS custom resources using Golang, Lambda and TypeScript.
 
 * Motivation
-- See blog post
+
+This is ready-to-deploy proof of concept leveraging Golang to efficiently handle the lifecycle management
+of so called [[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html][AWS custom resources]]. This repository exemplifies how to use these to create [[https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html][SSM parameters]] of type
+~SecureString~ in CDK. You can, of course, use this repository as a template for more advanced custom resources.
+
 * Deployment
+
+Make sure you first install all dependencies:
+- ~go~ binary
+- ~npm~
+
+Then clone this repository:
+
+#+begin_src sh
+$ git clone https://github.com/dorneanu/aws-custom-resource-golang
+#+end_src
+
+Then install all ~npm~ dependencies:
+
+#+begin_src sh
+$ cd deployments
+$ npm i --save-dev
+added 310 packages in 3s
+
+30 packages are looking for funding
+run `npm fund` for details
+#+end_src
+
+I always recommend to first run ~cdk diff~ before deploying. This way you can review the
+changes before it's to late:
+
+#+begin_src sh
+$ npx aws-cdk diff
+#+end_src
+
+Afterwards you can *deploy*:
+
+#+begin_src sh
+$ npx aws-cdk deploy
+#+end_src
+
 * TODOs
-- [ ] Try to bundle Golang based lambda function locally first (see this [[https://github.com/aws-samples/cdk-build-bundle-deploy-example/blob/main/cdk-bundle-go-lambda-example/lib/api-stack.ts][example]])
 - [ ] Add [[https://github.com/sirupsen/logrus][logrus]]
-- [ ] Test locally
+- [X] Try to bundle Golang based lambda function locally first (see this [[https://github.com/aws-samples/cdk-build-bundle-deploy-example/blob/main/cdk-bundle-go-lambda-example/lib/api-stack.ts][example]])
+- [X] Test locally
 * Resources
 - 2023-03-16 ◦ [[https://www.npmjs.com/package/cdk-secure-parameter-store][cdk-secure-parameter-store - Create SecureString SSM parameter through CDK (TypeScript project)]]
   - Related: [[https://github.com/HarshRohila/cdk-secure-parameter-store][github.com/HarshRohila/cdk-secure-parameter-store]]
