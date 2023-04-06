@@ -6,6 +6,8 @@ This is ready-to-deploy proof of concept leveraging Golang to efficiently handle
 of so called [[https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html][AWS custom resources]]. This repository exemplifies how to use these to create [[https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html][SSM parameters]] of type
 ~SecureString~ in CDK. You can, of course, use this repository as a template for more advanced custom resources.
 
+📖 You can read more on my blog at [[https://blog.dornea.nu/2023/04/06/aws-custom-resources-with-lambda-and-golang/][AWS Custom resources with Lambda and Golang]].
+
 * Deployment
 
 Make sure you first install all dependencies:
