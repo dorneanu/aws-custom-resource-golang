@@ -53,13 +53,13 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 	log.Printf("Creating SSM parameter")
 
 	// Get custom resource parameter from event
-	ssmPath, err := strProperty(event, "key")
+	ssmPath, err := cfnEventProperty(event, "key")
 	if err != nil {
 		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential's key: %s", err)
 	}
 	physicalResourceID = ssmPath
 
-	ssmValue, err := strProperty(event, "value")
+	ssmValue, err := cfnEventProperty(event, "value")
 	if err != nil {
 		return physicalResourceID, nil, fmt.Errorf("Couldn't extract credential's value: %s", err)
 	}
@@ -88,7 +88,7 @@ func (s SSMCustomResourceHandler) Update(ctx context.Context, event cfn.Event) (
 func (s SSMCustomResourceHandler) Delete(ctx context.Context, event cfn.Event) (string, map[string]interface{}, error) {
 	var physicalResourceID string
 
-	ssmPath, err := strProperty(event, "key")
+	ssmPath, err := cfnEventProperty(event, "key")
 	if err != nil {
 		return physicalResourceID, nil, fmt.Errorf("Couldn't find property credential's key: %s", err)
 	}
@@ -103,4 +103,11 @@ func (s SSMCustomResourceHandler) Delete(ctx context.Context, event cfn.Event) (
 	}
 
 	return physicalResourceID, nil, nil
+}
+
+func cfnEventProperty(event cfn.Event, propertyName string) (string, error) {
+	if val, ok := event.ResourceProperties[propertyName]; ok {
+		return val.(string), nil
+	}
+	return "", fmt.Errorf("Missing property %s", propertyName)
 }
