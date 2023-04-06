@@ -18,6 +18,7 @@ import (
 type SSMParameterAPI interface {
 	DeleteParameter(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error)
 	PutParameter(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error)
+	AddTagsToResource(ctx context.Context, params *ssm.AddTagsToResourceInput, optFns ...func(*ssm.Options)) (*ssm.AddTagsToResourceOutput, error)
 }
 
 type SSMCustomResourceHandler struct {
@@ -76,6 +77,20 @@ func (s SSMCustomResourceHandler) Create(ctx context.Context, event cfn.Event) (
 	if err != nil {
 		return physicalResourceID, nil, fmt.Errorf("Couldn't put parameter (%s): %s\n", ssmPath, err)
 	}
+
+	// Add tags to parameter
+	_, err = s.ssmClient.AddTagsToResource(context.Background(), &ssm.AddTagsToResourceInput{
+		ResourceType: types.ResourceTypeForTaggingParameter,
+		ResourceId:   aws.String(ssmPath),
+		Tags: []types.Tag{
+			{
+				Key:   aws.String("stackID"),
+				Value: aws.String(event.StackID),
+			},
+		},
+	})
+	log.Printf("Added tags to: %s", physicalResourceID)
+
 	return physicalResourceID, nil, nil
 }
 
